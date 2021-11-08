@@ -19,7 +19,7 @@ public class xmlRead {
         ArrayList<String> givens= new ArrayList<String>();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("/Users/idobar/Bsc/Year 2/AIAlgo/src/alarm_net.xml");
+            Document doc = builder.parse("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/src/alarm_net.xml");
             doc.getDocumentElement().normalize();
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
             NodeList varlist2= doc.getElementsByTagName("DEFINITION");
