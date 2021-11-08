@@ -80,6 +80,8 @@ public class xmlRead {
                     System.out.println(bNet.netNodes.get(i).getChilds().get(j).getName());
                 }
             }
+
+            System.out.println(bayesBall.bayesBallAns(bNet,"B-E|"));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
