@@ -3,7 +3,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +22,7 @@ public class xmlRead {
             doc.getDocumentElement().normalize();
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
             NodeList varlist2= doc.getElementsByTagName("DEFINITION");
+            String table="";
             for(int i=0; i<varlist.getLength();i++){
                 varlist=doc.getElementsByTagName("VARIABLE");
                 Node var=varlist.item(i);
@@ -43,34 +43,17 @@ public class xmlRead {
                         for(int j=0;j< v2.getElementsByTagName("GIVEN").getLength();j++){
                             givens.add(v2.getElementsByTagName("GIVEN").item(j).getTextContent());
                         }
-                        bNet.add(new netNode(vars.get(0),givens,bNet));
+                        for(int h=0;h<v2.getElementsByTagName("TABLE").getLength();h++){
+                            table=v2.getElementsByTagName("TABLE").item(h).getTextContent();
+                        }
+                        bNet.add(new netNode(vars.get(0),givens,outcomes,table,bNet));
                         System.out.println(vars);
                         System.out.println(outcomes);
                         System.out.println(givens);
                         givens.clear();
                         vars.clear();
                         outcomes.clear();
-                        /**
-                     NodeList outlist=v.getChildNodes();
-                     Node n=outlist.item(1);
-                     if(n.getNodeType()==Node.ELEMENT_NODE) {
-                     Element name = (Element) n;
-                     String content = name.getTextContent();
-                     String [] c=content.split("\r");
-                     System.out.println(c[0]);
-                     content.split(System.lineSeparator());
-                     // System.out.println(name.getTextCntent().stripIndent());//.split("\n"));
-                     }
 
-                     for(int j=0;j<outlist.getLength();j++){
-                     Node n=outlist.item(1);
-                     if(n.getNodeType()==Node.ELEMENT_NODE){
-                     Element name = (Element) n;
-                     System.out.println(name.getTextContent());
-                     }
-                     }
-
-                    **/
                 }
                 }
             }
@@ -80,8 +63,7 @@ public class xmlRead {
                     System.out.println(bNet.netNodes.get(i).getChilds().get(j).getName());
                 }
             }
-
-            System.out.println(bayesBall.bayesBallAns(bNet,"B-E|"));
+            System.out.println(bayesBall.bayesBallAns(bNet,"B-J|M=T"));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
