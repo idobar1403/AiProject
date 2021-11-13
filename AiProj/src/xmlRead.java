@@ -63,7 +63,7 @@ public class xmlRead {
                     System.out.println(bNet.netNodes.get(i).getChilds().get(j).getName());
                 }
             }
-            System.out.println(bayesBall.bayesBallAns(bNet,"B-J|M=T"));
+            System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

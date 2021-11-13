@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class net {
     public ArrayList<netNode> netNodes;
@@ -19,6 +20,15 @@ public class net {
             if (this.netNodes.get(i).getName() == node.getName()) {
                 return true;
             }
+        }
+        return false;
+    }
+    public boolean inParents(netNode e, String name){
+        if(e.getName().equals(name)){
+            return true;
+        }
+        for(int i=0;i<e.getParents().size();i++){
+            return inParents(e.getParents().get(i),name);
         }
         return false;
     }

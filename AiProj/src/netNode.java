@@ -67,6 +67,18 @@ public class netNode {
         return false;
     }
 
+    public ArrayList<HashMap> getFactor(){
+        return this.factor;
+    }
+    public int getAsciSize(){
+        int ans=0;
+        ans=ans+this.name.charAt(0);
+        for(int i=0;i<this.parents.size();i++){
+            ans=ans+this.parents.get(i).getName().charAt(0);
+        }
+        return ans;
+    }
+
     public void buildCpt() {
         int size = this.outcomes.size();
         for (int i = 0; i < this.parents.size(); i++) {
