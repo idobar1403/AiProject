@@ -3,15 +3,22 @@ import java.util.HashMap;
 
 public class net {
     public ArrayList<netNode> netNodes;
-
-    public net() {
+    public net(){
         this.netNodes = new ArrayList<netNode>();
+    }
+    public net(ArrayList<netNode> netNodes) {
+        this.netNodes = new ArrayList<netNode>();
+        for (int i=0;i<netNodes.size();i++){
+            this.netNodes.add(netNodes.get(i));
+        }
+        for (int i=0;i<this.netNodes.size();i++){
+            addChild();
+        }
     }
 
     public void add(netNode node) {
         if (!exist(node)) {
             this.netNodes.add(node);
-            addChild();
         }
     }
 
@@ -35,8 +42,10 @@ public class net {
 
     public netNode getByString(String n) {
         for (int i = 0; i < this.netNodes.size(); i++) {
-            if (this.netNodes.get(i).getName().equals(n)) {
-                return this.netNodes.get(i);
+            if(this.netNodes.get(i).getName()!=null) {
+                if (this.netNodes.get(i).getName().equals(n)) {
+                    return this.netNodes.get(i);
+                }
             }
         }
         return null;

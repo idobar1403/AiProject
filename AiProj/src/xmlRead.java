@@ -13,6 +13,7 @@ public class xmlRead {
     public static void main(String[] args) {
         net bNet = new net();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        ArrayList<netNode> arrNode = new ArrayList<netNode>();
         ArrayList<String> vars= new ArrayList<String>();
         ArrayList<String> outcomes= new ArrayList<String>();
         ArrayList<String> givens= new ArrayList<String>();
@@ -22,7 +23,7 @@ public class xmlRead {
             doc.getDocumentElement().normalize();
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
             NodeList varlist2= doc.getElementsByTagName("DEFINITION");
-            String table="";
+            ArrayList <String> table=new ArrayList<String>();
             for(int i=0; i<varlist.getLength();i++){
                 varlist=doc.getElementsByTagName("VARIABLE");
                 Node var=varlist.item(i);
@@ -44,9 +45,15 @@ public class xmlRead {
                             givens.add(v2.getElementsByTagName("GIVEN").item(j).getTextContent());
                         }
                         for(int h=0;h<v2.getElementsByTagName("TABLE").getLength();h++){
-                            table=v2.getElementsByTagName("TABLE").item(h).getTextContent();
+                            table.add(v2.getElementsByTagName("TABLE").item(h).getTextContent());
                         }
-                        bNet.add(new netNode(vars.get(0),givens,outcomes,table,bNet));
+                        bNet.add(new netNode(vars.get(0),givens,outcomes,bNet));
+                        if(bNet.netNodes.get(bNet.netNodes.size()-1).getName()==null){
+                            bNet.netNodes.remove(bNet.netNodes.size()-1);
+                        }
+                        netNode netnode= bNet.getByString(vars.get(0));
+                        bNet.netNodes.remove(netnode);
+                        bNet.netNodes.add(i,netnode);
                         System.out.println(vars);
                         System.out.println(outcomes);
                         System.out.println(givens);
@@ -57,7 +64,10 @@ public class xmlRead {
                 }
                 }
             }
-            //bNet.addChild();
+            bNet.addChild();
+            for(int i=0;i<bNet.netNodes.size();i++){
+                bNet.netNodes.get(i).build(table.get(i));
+            }
             for(int i=0;i<bNet.netNodes.size();i++) {
                 for (int j = 0; j < bNet.netNodes.get(i).getChilds().size(); j++) {
                     System.out.println(bNet.netNodes.get(i).getChilds().get(j).getName());

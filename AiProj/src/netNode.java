@@ -10,7 +10,34 @@ public class netNode {
     public ArrayList<String> outcomes;
     public ArrayList<HashMap> factor;
 
-    public netNode(String name, ArrayList<String> parents, ArrayList<String> outcomes,String table ,net bNet) {
+    public netNode(String name, ArrayList<String> parents, ArrayList<String> outcomes,net bNet) {
+        if(bNet.getByString(name)==null) {
+            this.bNet = bNet;
+            this.name = name;
+            this.childs = new ArrayList<netNode>();
+            this.parents = new ArrayList<netNode>();
+            if (parents.size() > 0) {
+                for (int i = 0; i < parents.size(); i++) {
+                    if (this.bNet.getByString(parents.get(i)) != null) {
+                        this.parents.add(this.bNet.getByString(parents.get(i)));
+                    } else {
+                        this.parents.add(new netNode(parents.get(i)));
+                        bNet.add(this.parents.get(i));
+                    }
+                }
+            }
+            this.outcomes = new ArrayList<String>();
+            for (int i = 0; i < outcomes.size(); i++) {
+                this.outcomes.add(outcomes.get(i));
+            }
+            this.factor = new ArrayList<HashMap>();
+
+        }
+        else{
+            bNet.getByString(name).toNetNode(name,parents, outcomes,bNet);
+        }
+    }
+    public void toNetNode(String name, ArrayList<String> parents, ArrayList<String> outcomes,net bNet){
         this.bNet = bNet;
         this.name = name;
         this.childs = new ArrayList<netNode>();
@@ -21,6 +48,7 @@ public class netNode {
                     this.parents.add(this.bNet.getByString(parents.get(i)));
                 } else {
                     this.parents.add(new netNode(parents.get(i)));
+                    bNet.add(this.parents.get(i));
                 }
             }
         }
@@ -29,13 +57,7 @@ public class netNode {
             this.outcomes.add(outcomes.get(i));
         }
         this.factor = new ArrayList<HashMap>();
-        this.buildCpt();
-        String [] tableList=table.split(" ");
-        for(int i=0;i<this.factor.size();i++){
-            this.factor.get(i).put("P",tableList[i] );
-        }
     }
-
     public netNode(String name) {
         this.name = name;
         this.childs = new ArrayList<netNode>();
@@ -66,6 +88,13 @@ public class netNode {
         }
         return false;
     }
+    public void build(String table){
+        this.buildCpt();
+        String [] tableList=table.split(" ");
+        for(int i=0;i<this.factor.size();i++){
+            this.factor.get(i).put("P",tableList[i] );
+        }
+    }
 
     public ArrayList<HashMap> getFactor(){
         return this.factor;
@@ -91,15 +120,17 @@ public class netNode {
             for (int j = i; j < size; j += this.outcomes.size()) {
                 this.factor.get(j).put(this.name, this.outcomes.get(i));
             }
-        }
+        }int time=size;
         for (int i = 0; i < this.parents.size(); i++) {
+            time=time/this.parents.get(i).getOutcomes().size();
             for (int h = 0; h < this.parents.get(i).getOutcomes().size(); h++) {
-                int times= (int)Math.pow(this.parents.get(i).getOutcomes().size(), (this.parents.size()-i ));
-                for (int j = (h * times); j < size; j += times) {
-                    for (int m = j; m < j+times; m++) {
-                        this.factor.get(m).put(this.parents.get(i).getName(), this.parents.get(i).getOutcomes().get(h));
+                for (int j = (h * time); j < size; j += time*(this.parents.get(i).getOutcomes().size()-1)) {
+                    for (int m = j; m < j+time; m++) {
+                        if (m < size) {
+                            this.factor.get(m).put(this.parents.get(i).getName(), this.parents.get(i).getOutcomes().get(h));
+                        }
                     }
-                    j+=times;
+                    j+=time;
                 }
             }
         }
