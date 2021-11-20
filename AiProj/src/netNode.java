@@ -88,6 +88,9 @@ public class netNode {
         }
         return false;
     }
+    public void setFactor(ArrayList<HashMap> f){
+      this.factor=f;
+    }
     public void build(String table){
         this.buildCpt();
         String [] tableList=table.split(" ");

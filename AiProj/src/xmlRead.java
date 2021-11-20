@@ -68,12 +68,8 @@ public class xmlRead {
             for(int i=0;i<bNet.netNodes.size();i++){
                 bNet.netNodes.get(i).build(table.get(i));
             }
-            for(int i=0;i<bNet.netNodes.size();i++) {
-                for (int j = 0; j < bNet.netNodes.get(i).getChilds().size(); j++) {
-                    System.out.println(bNet.netNodes.get(i).getChilds().get(j).getName());
-                }
-            }
-            System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
+            //System.out.println(bayesBall.bayesBallAns(bNet,"C2-A3|B3=T,C1=T"));
+           System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

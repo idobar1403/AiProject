@@ -35,7 +35,9 @@ public class net {
             return true;
         }
         for(int i=0;i<e.getParents().size();i++){
-            return inParents(e.getParents().get(i),name);
+            if(inParents(e.getParents().get(i),name)){
+                return true;
+            }
         }
         return false;
     }
