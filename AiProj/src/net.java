@@ -15,6 +15,9 @@ public class net {
             addChild();
         }
     }
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 
     public void add(netNode node) {
         if (!exist(node)) {

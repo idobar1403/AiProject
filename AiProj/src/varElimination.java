@@ -357,7 +357,7 @@ public class varElimination {
         }
         answer=answer/sum;
         answer= (double)Math.round(answer* 100000d) /100000d;
-        String realAnswer=""+answer;
+        String realAnswer=""+answer+","+adding+","+mul;
         return realAnswer;
     }
 

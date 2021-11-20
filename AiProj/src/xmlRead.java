@@ -6,11 +6,15 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class xmlRead {
-    public static void main(String[] args) {
+    public static net makeNet(String fileName){
         net bNet = new net();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         ArrayList<netNode> arrNode = new ArrayList<netNode>();
@@ -19,7 +23,7 @@ public class xmlRead {
         ArrayList<String> givens= new ArrayList<String>();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/src/alarm_net.xml");
+            Document doc = builder.parse(fileName);
             doc.getDocumentElement().normalize();
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
             NodeList varlist2= doc.getElementsByTagName("DEFINITION");
@@ -68,8 +72,10 @@ public class xmlRead {
             for(int i=0;i<bNet.netNodes.size();i++){
                 bNet.netNodes.get(i).build(table.get(i));
             }
+            //System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
+            return bNet;
             //System.out.println(bayesBall.bayesBallAns(bNet,"C2-A3|B3=T,C1=T"));
-           System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
+
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -77,5 +83,6 @@ public class xmlRead {
         } catch (SAXException e) {
             e.printStackTrace();
         }
+        return bNet;
     }
     }
