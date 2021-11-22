@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class bayesBall {
     public static String bayesBallAns(net bnet, String query) {
+        //split the query in order to get the relevant noeds
         String[] split1 = query.split("\\|");
         String[] depen = split1[0].split("-");
         netNode start = bnet.getByString(depen[0]);
         netNode end = bnet.getByString(depen[1]);
         ArrayList<netNode> q = new ArrayList<netNode>();
         if (split1.length > 1) {
-            //bayesball()
             String[] split2 = split1[1].split(",");
             for (int i = 0; i < split2.length; i++) {
                 String temp = split2[i];

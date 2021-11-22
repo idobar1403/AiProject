@@ -4,12 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class fileRead {
+public class Ex1 {
     public static void main(String[] args) {
         readFile();
     }
     public static void readFile()  {
         try {
+            // create the output file
             File myObj = new File("output.txt");
             if (myObj.createNewFile()) {
             } else {
@@ -20,24 +21,29 @@ public class fileRead {
             e.printStackTrace();
         }
         try {
+            //define writer in the output.txt file
             FileWriter myWriter = new FileWriter("output.txt");
-            File myObj = new File("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/src/input.txt");
+            //read from the file
+            File myObj = new File("input.txt");
             Scanner myReader = new Scanner(myObj);
             String data1 = myReader.nextLine();
+            //create empty net
             net bNet=new net();
-            bNet= xmlRead.makeNet(data1);
-            net rNet=new net();
             while (myReader.hasNextLine()) {
-                rNet=xmlRead.makeNet(data1);
+                //every run create net from the xml file
+                bNet=xmlRead.makeNet(data1);
                 String data = myReader.nextLine();
                 if('P'==data.charAt(0)){
-                    myWriter.write(varElimination.variableElimination(rNet,data));
+                    // go to variable elimination
+                    myWriter.write(varElimination.variableElimination(bNet,data));
                 }
                 else{
-                    myWriter.write(bayesBall.bayesBallAns(rNet,data));
+                    // go to bayesBall
+                    myWriter.write(bayesBall.bayesBallAns(bNet,data));
                 }
-                myWriter.write("\n");
-
+                if (myReader.hasNextLine()) {
+                    myWriter.write("\n");
+                }
             }
             myWriter.close();
             myReader.close();
@@ -47,8 +53,5 @@ public class fileRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

@@ -99,9 +99,9 @@ public class varElimination {
                 }
             }
 
-        ArrayList<ArrayList<HashMap>> factors= new ArrayList<ArrayList<HashMap>>();
+        ArrayList<ArrayList<HashMap<String,String>>> factors= new ArrayList<ArrayList<HashMap<String,String>>>();
         ArrayList<ArrayList<HashMap>> sorted = new ArrayList<ArrayList<HashMap>>();
-        ArrayList<ArrayList<HashMap>> keep = new ArrayList<ArrayList<HashMap>>();
+        ArrayList<ArrayList<HashMap<String,String>>> keep = new ArrayList<ArrayList<HashMap<String,String>>>();
         ArrayList<String> names=new ArrayList<String>();
         ArrayList<String> names1=new ArrayList<String>();
         for(int i =0;i< evidence.size();i++) {
@@ -120,7 +120,7 @@ public class varElimination {
                 }
             }
         }
-        ArrayList<ArrayList<HashMap>> joined = new ArrayList<ArrayList<HashMap>>();
+        ArrayList<ArrayList<HashMap<String,String>>> joined = new ArrayList<ArrayList<HashMap<String,String>>>();
         ArrayList<netNode> getCpt = new ArrayList<netNode>();
         for(int h=0;h<ghidens.size();h++) {
             for (int i = 0; i < rNet.netNodes.size(); i++) {
@@ -185,7 +185,9 @@ public class varElimination {
                                 }
                                 if (n == true) {
                                     mul++;
-                                    joined.get(joined.size()-1).get(m).put("P", p1 * p2);
+                                    p2=p2*p1;
+                                    String stringAnswer=""+p2;
+                                    joined.get(joined.size()-1).get(m).put("P", stringAnswer);
                                 }
                             }
                         }
@@ -232,7 +234,9 @@ public class varElimination {
                                 }
                                 if (n == true) {
                                     mul++;
-                                    joined.get(joined.size() - 1).get(m).put("P", p1 * p2);
+                                    p2=p2*p1;
+                                    String stringAnswer=""+p2;
+                                    joined.get(joined.size()-1).get(m).put("P", stringAnswer);
                                 }
                             }
                         }
@@ -270,7 +274,8 @@ public class varElimination {
                     }
                 }
                 joined.get(0).get(i).remove(ghidens.get(h));
-                joined.get(0).get(i).replace("P",sum);
+                String stringSum=""+sum;
+                joined.get(0).get(i).replace("P",stringSum);
             }
             factors.add(joined.get(0));
             keep.clear();
@@ -309,7 +314,9 @@ public class varElimination {
                             }
                             if (n == true) {
                                 mul++;
-                                joined.get(joined.size() - 1).get(m).put("P", p1 * p2);
+                                p2=p2*p1;
+                                String stringAnswer=""+p2;
+                                joined.get(joined.size() - 1).get(m).put("P", stringAnswer);
                             }
                         }
                     }
@@ -361,7 +368,7 @@ public class varElimination {
         return realAnswer;
     }
 
-    public static ArrayList<String> sort(ArrayList<ArrayList<HashMap>> temp,net bNet,ArrayList<String>names){
+    public static ArrayList<String> sort(ArrayList<ArrayList<HashMap<String,String>>> temp,net bNet,ArrayList<String>names){
         for(int i=0;i< temp.size();i++){
             for(int j=1;j< temp.size()-i;j++){
                 if(temp.get(j-1).size()>temp.get(j).size()){
@@ -388,7 +395,7 @@ public class varElimination {
         }
         return names;
     }
-    public static ArrayList<HashMap> join(netNode a, netNode b,net rNet){
+    public static ArrayList<HashMap<String,String>> join(netNode a, netNode b,net rNet){
        int size =a.getFactor().size();
        ArrayList<netNode> p=new ArrayList<netNode>();
        for(Object key:b.getFactor().get(0).keySet()){
@@ -402,7 +409,7 @@ public class varElimination {
                p.add(rNet.getByString((String) key));
            }
        }
-        ArrayList<HashMap> joind=new ArrayList<HashMap>();
+        ArrayList<HashMap<String,String>> joind=new ArrayList<HashMap<String,String>>();
         joind=buildCpt(p);
 //       for(int i=0;i<a.getParents().size();i++){
 //           p.add(a.getParents().get(i));
@@ -411,14 +418,14 @@ public class varElimination {
 //        //joind= buildCpt(a.getOutcomes(),p);
         return joind;
     }
-    public static ArrayList<HashMap> buildCpt(ArrayList<netNode> p) {
+    public static ArrayList<HashMap<String, String>> buildCpt(ArrayList<netNode> p) {
         int size = 1;
-        ArrayList<HashMap> factor = new ArrayList<HashMap>();
+        ArrayList<HashMap<String,String>> factor = new ArrayList<HashMap<String,String>>();
         for (int i = 0; i < p.size(); i++) {
             size = size * p.get(i).getOutcomes().size();
         }
         for (int i = 0; i < size; i++) {
-            factor.add(i, new LinkedHashMap());
+            factor.add(i, new LinkedHashMap<String,String>());
         }
         for(int i=0;i<p.get(0).outcomes.size();i++){
             for (int j = i; j < size; j += p.get(0).outcomes.size()) {

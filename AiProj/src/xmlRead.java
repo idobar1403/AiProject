@@ -15,9 +15,10 @@ import java.util.Scanner;
 
 public class xmlRead {
     public static net makeNet(String fileName){
-        net bNet = new net();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        ArrayList<netNode> arrNode = new ArrayList<netNode>();
+        //create empty net
+        net bNet = new net();
+        // create ArrayLists that will contain the data from the xml file
         ArrayList<String> vars= new ArrayList<String>();
         ArrayList<String> outcomes= new ArrayList<String>();
         ArrayList<String> givens= new ArrayList<String>();
@@ -28,6 +29,7 @@ public class xmlRead {
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
             NodeList varlist2= doc.getElementsByTagName("DEFINITION");
             ArrayList <String> table=new ArrayList<String>();
+            // run on every variable and create netNode by his data
             for(int i=0; i<varlist.getLength();i++){
                 varlist=doc.getElementsByTagName("VARIABLE");
                 Node var=varlist.item(i);
@@ -51,6 +53,7 @@ public class xmlRead {
                         for(int h=0;h<v2.getElementsByTagName("TABLE").getLength();h++){
                             table.add(v2.getElementsByTagName("TABLE").item(h).getTextContent());
                         }
+                        //creat new netNode and add it to the net by his place, and if there are duplicates then remove them
                         bNet.add(new netNode(vars.get(0),givens,outcomes,bNet));
                         if(bNet.netNodes.get(bNet.netNodes.size()-1).getName()==null){
                             bNet.netNodes.remove(bNet.netNodes.size()-1);
@@ -58,9 +61,6 @@ public class xmlRead {
                         netNode netnode= bNet.getByString(vars.get(0));
                         bNet.netNodes.remove(netnode);
                         bNet.netNodes.add(i,netnode);
-                        System.out.println(vars);
-                        System.out.println(outcomes);
-                        System.out.println(givens);
                         givens.clear();
                         vars.clear();
                         outcomes.clear();
@@ -68,14 +68,13 @@ public class xmlRead {
                 }
                 }
             }
+            //after adding all the nodes to the net add for every netNode his childs
             bNet.addChild();
+            //for every netNode build his cpt with the values from the correct table
             for(int i=0;i<bNet.netNodes.size();i++){
                 bNet.netNodes.get(i).build(table.get(i));
             }
-            //System.out.println(varElimination.variableElimination(bNet,"P(J=T|B=T) A-E-M"));
             return bNet;
-            //System.out.println(bayesBall.bayesBallAns(bNet,"C2-A3|B3=T,C1=T"));
-
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
