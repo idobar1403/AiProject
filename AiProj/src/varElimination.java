@@ -146,6 +146,9 @@ public class varElimination {
             for (int i = 0; i < names.size(); i++) {
                 getCpt.add(relevent.get(i));
             }
+            for (int i = 0; i < relevent.size(); i++) {
+                joined.add(relevent.get(i).getFactor());
+            }
             //run on all of the hiden and join them
             for (int i = 0; i < relevent.size(); i++) {
                 if (relevent.size() > 1) {
@@ -192,60 +195,17 @@ public class varElimination {
                             }
                         }
                     }
+                    relevent.get(i+1).setFactor(joined.get(joined.size()-1));
                     relevent.remove(i);
-                    relevent.remove(i);
+                    joined.remove(i);
+                    joined.remove(i);
+                    names.remove(i);
                     i--;
-                }
-            }
-            if (relevent.size() == 1) {
-                joined.add(0, relevent.get(0).getFactor());
-            }
-            for (int i = 0; i < joined.size(); i++) {
-                getCpt.get(i).setFactor(joined.get(i));
-            }
-            for (int i = joined.size(); i < getCpt.size(); i++) {
-                getCpt.remove(i);
-            }
-            for (int i = 0; i < getCpt.size(); i++) {
-                if (joined.size() > 1) {
-                    joined.add(join(getCpt.get(i), getCpt.get(i + 1), rNet));
-                    for (int j = 0; j < getCpt.get(i).getFactor().size(); j++) {
-                        HashMap temp = (HashMap) getCpt.get(i).getFactor().get(j).clone();
-                        String p = temp.get("P").toString();
-                        double p1 = Double.parseDouble(p);
-                        temp.remove("P");
-                        joined.get(i).indexOf(temp);
-                        for (int z = 0; z < getCpt.get(i + 1).getFactor().size(); z++) {
-                            HashMap temp1 = (HashMap) getCpt.get(i + 1).getFactor().get(z).clone();
-                            String p3 = temp1.get("P").toString();
-                            double p2 = Double.parseDouble(p3);
-                            temp1.remove("P");
-                            for (int m = 0; m < joined.get(joined.size() - 1).size(); m++) {
-                                boolean n = true;
-                                for (Object key : temp.keySet()) {
-                                    if (!joined.get(joined.size() - 1).get(m).get(key).equals(temp.get(key))) {
-                                        n = false;
-                                    }
-                                }
-                                for (Object key : temp1.keySet()) {
-                                    if (!joined.get(joined.size() - 1).get(m).get(key).equals(temp1.get(key))) {
-                                        n = false;
-                                    }
-                                }
-                                if (n == true) {
-                                    mul++;
-                                    p2=p2*p1;
-                                    String stringAnswer=""+p2;
-                                    joined.get(joined.size()-1).get(m).put("P", stringAnswer);
-                                }
-                            }
-                        }
+                    names=sort(joined,rNet,names);
+                    relevent.clear();
+                    for (int j = 0; j < names.size(); j++) {
+                        relevent.add(rNet.getByString(names.get(j)));
                     }
-                    joined.remove(i);
-                    joined.remove(i);
-                    getCpt.get(i).setFactor(joined.get(joined.size() - 1));
-                    getCpt.remove(i + 1);
-                    i--;
                 }
             }
             for (int i = 0; i < joined.get(0).size(); i++) {
@@ -277,15 +237,35 @@ public class varElimination {
                 String stringSum=""+sum;
                 joined.get(0).get(i).replace("P",stringSum);
             }
-            factors.add(joined.get(0));
+            getCpt.remove(rNet.getByString(ghidens.get(h)));
+            rNet.netNodes.remove(rNet.getByString(ghidens.get(h)));
+            for (int i = 0; i < getCpt.size()-1; i++) {
+                getCpt.remove(i);
+            }
+            getCpt.get(0).setFactor(joined.get(0));
+            for (int i = 0; i < rNet.netNodes.size(); i++) {
+                for (int j = 0; j < rNet.netNodes.get(i).getFactor().size(); j++) {
+                    if (rNet.netNodes.get(i).getFactor().get(j).containsKey(ghidens.get(h))) {
+                        rNet.netNodes.get(i).getFactor().get(j).remove(ghidens.get(h));
+                    }
+                }
+            }
+            joined.clear();
+            getCpt.clear();
             keep.clear();
             names.clear();
         }
 
-            if(!names1.contains(query[0])){
-                getCpt.add(rNet.getByString(query[0]));
-                joined.add(rNet.getByString(query[0]).getFactor());
+        for (int i = 0; i < rNet.netNodes.size(); i++) {
+            for (int j = 0; j < rNet.netNodes.get(i).getFactor().size(); j++) {
+                if (rNet.netNodes.get(i).getFactor().get(j).containsKey(query[0])) {
+                joined.add(rNet.netNodes.get(i).getFactor());
+                getCpt.add(rNet.netNodes.get(i));
+                names.add(rNet.netNodes.get(i).getName());
+                break;
+                }
             }
+        }
         for (int i = 0; i < getCpt.size(); i++) {
             if (joined.size() > 1) {
                 joined.add(join(getCpt.get(i), getCpt.get(i + 1), rNet));
@@ -321,11 +301,17 @@ public class varElimination {
                         }
                     }
                 }
+                getCpt.get(i+1).setFactor(joined.get(joined.size()-1));
+                getCpt.remove(i);
                 joined.remove(i);
                 joined.remove(i);
-                getCpt.get(i).setFactor(joined.get(joined.size() - 1));
-                getCpt.remove(i + 1);
+                names.remove(i);
                 i--;
+                names=sort(joined,rNet,names);
+                getCpt.clear();
+                for (int j = 0; j < names.size(); j++) {
+                    getCpt.add(rNet.getByString(names.get(j)));
+                }
             }
         }
 
@@ -411,11 +397,6 @@ public class varElimination {
        }
         ArrayList<HashMap<String,String>> joind=new ArrayList<HashMap<String,String>>();
         joind=buildCpt(p);
-//       for(int i=0;i<a.getParents().size();i++){
-//           p.add(a.getParents().get(i));
-//       }
-//
-//        //joind= buildCpt(a.getOutcomes(),p);
         return joind;
     }
     public static ArrayList<HashMap<String, String>> buildCpt(ArrayList<netNode> p) {
