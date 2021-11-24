@@ -64,7 +64,6 @@ public class xmlRead {
                         givens.clear();
                         vars.clear();
                         outcomes.clear();
-
                 }
                 }
             }

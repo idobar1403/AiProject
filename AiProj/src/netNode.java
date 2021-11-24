@@ -39,7 +39,13 @@ public class netNode {
             bNet.getByString(name).toNetNode(name,parents, outcomes,bNet);
         }
     }
-    //this function build netNode that already exist
+    /**
+     * this function build netNode that already exist
+     * @param name
+     * @param parents
+     * @param outcomes
+     * @param bNet
+     */
     public void toNetNode(String name, ArrayList<String> parents, ArrayList<String> outcomes,net bNet){
         this.bNet = bNet;
         this.name = name;
@@ -61,29 +67,55 @@ public class netNode {
         }
         this.factor = new ArrayList<HashMap<String,String>>();
     }
-    // build netNode only by name
+    /**
+     * build netNode only by name
+     * @param name
+     */
     public netNode(String name) {
         this.name = name;
         this.childs = new ArrayList<netNode>();
         this.parents = new ArrayList<netNode>();
     }
-    //get the netNode name
+    /**
+     * get the netNode name
+     * @return String name
+     */
     public String getName() {
         return this.name;
     }
-    //get the netNode childs
+    /**
+     * get the netNode childs
+     * @return ArrayList<netNode>
+     */
     public ArrayList<netNode> getChilds() {
         return this.childs;
     }
-    //get the netNode parents
-    public ArrayList<netNode> getParents() {return this.parents;}
-    //get the netNode outcomes
+    /**
+     * get the netNode parents
+     * @return ArrayList<netNode>
+     */
+    public ArrayList<netNode> getParents() {
+        return this.parents;
+    }
+    /**
+     * get the netNode outcomes
+     * @return ArrayList<String>
+     */
     public ArrayList<String> getOutcomes() {
         return this.outcomes;
     }
-    //get the netNode factor
-    public ArrayList<HashMap<String,String>> getFactor(){return this.factor;}
-    //check if the given netNode is ancestor of the current netNode
+    /**
+     * get the netNode factor
+     * @return ArrayList<HashMap<String,String>>
+     */
+    public ArrayList<HashMap<String,String>> getFactor(){
+        return this.factor;
+    }
+    /**
+     * check if the given netNode is ancestor of the current netNode
+     * @param node
+     * @return boolean answer
+     */
     public boolean inParents(netNode node) {
         for (int i = 0; i < this.parents.size(); i++) {
             if (this.parents.get(i).getName() == node.name) {
@@ -92,11 +124,17 @@ public class netNode {
         }
         return false;
     }
-    //set new value to the factor
+    /**
+     * replace the current factor with the given factor
+     * @param f
+     */
     public void setFactor(ArrayList<HashMap<String,String>> f){
       this.factor=f;
     }
-    //this function get the cpt and fill the values in the correct place
+    /**
+     * this function get the cpt and fill the values in the correct place
+     * @param table
+     */
     public void build(String table){
         this.buildCpt();
         String [] tableList=table.split(" ");
@@ -104,7 +142,10 @@ public class netNode {
             this.factor.get(i).put("P",tableList[i] );
         }
     }
-    // computes the ascii value of the netNode cpt
+    /**
+     * computes the ascii value of the netNode cpt
+     * @return int value
+     */
     public int getAsciSize(){
         int ans=0;
         ans=ans+this.name.charAt(0);
@@ -113,7 +154,9 @@ public class netNode {
         }
         return ans;
     }
-    //this function build the cpt given the parents and the current netNode outcomes
+    /**
+     * this function build the cpt given the parents and the current netNode outcomes
+     */
     public void buildCpt() {
         //compute the size of the table
         int size = this.outcomes.size();

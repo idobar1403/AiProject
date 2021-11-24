@@ -3,11 +3,16 @@ import java.util.HashMap;
 
 public class net {
     public ArrayList<netNode> netNodes;
-    //build empty net
+    /**
+     * build net with no netNodes
+     */
     public net(){
         this.netNodes = new ArrayList<netNode>();
     }
-    //build net from given netNodes
+    /**
+     * build net from given netNodes
+     * @param netNodes
+     */
     public net(ArrayList<netNode> netNodes) {
         this.netNodes = new ArrayList<netNode>();
         for (int i=0;i<netNodes.size();i++){
@@ -17,13 +22,22 @@ public class net {
             addChild();
         }
     }
-    //add netNode to the net
+
+    /**
+     * add netNode to the net
+     * @param node
+     */
     public void add(netNode node) {
         if (!exist(node)) {
             this.netNodes.add(node);
         }
     }
-    //ask if the netNode is already exist in the net
+
+    /**
+     * ask if the netNode is already exist in the net
+     * @param node
+     * @return boolean answer
+     */
     public boolean exist(netNode node) {
         for (int i = 0; i < this.netNodes.size(); i++) {
             if (this.netNodes.get(i).getName() == node.getName()) {
@@ -32,7 +46,12 @@ public class net {
         }
         return false;
     }
-    // ask if the netNode of the name is ancestor of the given netNode
+    /**
+     * ask if the netNode of the name is ancestor of the given netNode by recursion
+     * @param e
+     * @param name
+     * @return boolean answer
+     */
     public boolean inParents(netNode e, String name){
         if(e.getName().equals(name)){
             return true;
@@ -44,7 +63,11 @@ public class net {
         }
         return false;
     }
-    // return the netNode by his name
+    /**
+     * return the netNode with the same name as the given string
+     * @param n
+     * @return netNode
+     */
     public netNode getByString(String n) {
         for (int i = 0; i < this.netNodes.size(); i++) {
             if(this.netNodes.get(i).getName()!=null) {
@@ -55,7 +78,9 @@ public class net {
         }
         return null;
     }
-    // update for every netNode his childes by iterate over his parents
+    /**
+     * update for every netNode his childes by iterate over his parents
+     */
     public void addChild() {
         for (int i = 0; i < this.netNodes.size(); i++) {
             for (int j = 0; j < this.netNodes.get(i).parents.size(); j++) {
@@ -74,5 +99,3 @@ public class net {
         }
     }
 }
-
-
