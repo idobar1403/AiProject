@@ -26,13 +26,16 @@ public class varElimination {
         String [] firstSplit = bayesAns.split("\\|");
         String ask = firstSplit[0];
         String [] query=ask.split("=");
-        String [] givens= firstSplit[1].split(",|=");
+        if(firstSplit.length>1) {
+            String[] givens = firstSplit[1].split(",|=");
+            for (int i = 0; i < givens.length; i += 2) {
+                evidence.add(givens[i]);
+                evidenceValues.add(givens[i + 1]);
+            }
+        }
         rNet.netNodes.add(bNet.getByString(query[0]));
         // add the evidence to arrayList and the values to other one
-        for (int i = 0; i < givens.length; i += 2) {
-            evidence.add(givens[i]);
-            evidenceValues.add(givens[i + 1]);
-        }
+
         // check if there are hidden nodes
         if(bayesSplit.length>1) {
             String [] hiden=bayesSplit[1].split("-");
@@ -158,6 +161,7 @@ public class varElimination {
                     }
                 }
             }
+
             // sort the keepFactors ArrayList
             namesOfFactors = sort(keepFactors, rNet, namesOfFactors);
             // add the current name of nodes and the factors to ArrayLists
@@ -305,11 +309,16 @@ public class varElimination {
             factorsOfHidden.clear();
             keepFactors.clear();
             namesOfFactors.clear();
+            for (int i = 0; i < rNet.netNodes.size(); i++) {
+                if(rNet.netNodes.get(i).getFactor().size()==1){
+                    rNet.netNodes.get(i).getFactor().clear();
+                }
+            }
         }
         // add all the factors that contains the query
         for (int i = 0; i < rNet.netNodes.size(); i++) {
             for (int j = 0; j < rNet.netNodes.get(i).getFactor().size(); j++) {
-                if (rNet.netNodes.get(i).getFactor().get(j).containsKey(query[0])) {
+                if (rNet.netNodes.get(i).getFactor().get(j).containsKey(query[0])&&!joinedFactors.contains(rNet.netNodes.get(i).getFactor())) {
                 joinedFactors.add(rNet.netNodes.get(i).getFactor());
                 factorsOfHidden.add(rNet.netNodes.get(i));
                 namesOfFactors.add(rNet.netNodes.get(i).getName());

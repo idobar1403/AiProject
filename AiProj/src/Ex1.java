@@ -24,19 +24,24 @@ public class Ex1 {
             //define writer in the output.txt file
             FileWriter myWriter = new FileWriter("output.txt");
             //read from the file
-            File myObj = new File("input.txt");
+            File myObj = new File("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/data/input1.txt");
             Scanner myReader = new Scanner(myObj);
             String data1 = myReader.nextLine();
             //create empty net
             net bNet=new net();
             while (myReader.hasNextLine()) {
                 //every run create net from the xml file
-                bNet=xmlRead.makeNet(data1);
+                bNet=xmlRead.makeNet("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/data/"+data1);
                 String data = myReader.nextLine();
-                if('P'==data.charAt(0)){
-                    // go to variable elimination
-                    myWriter.write(varElimination.variableElimination(bNet,data));
-                }
+
+                    if ('P' == data.charAt(0)) {
+                        try {
+                            // go to variable elimination
+                            myWriter.write(varElimination.variableElimination(bNet, data));
+                        } catch (Exception e) {
+                            myWriter.write("fail");
+                        }
+                    }
                 else{
                     // go to bayesBall
                     myWriter.write(bayesBall.bayesBallAns(bNet,data));
