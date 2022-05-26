@@ -1,9 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +7,7 @@ class bayesBallTest {
 
     @Test
     void bayesBallAns() {
-        net alarmNet = new net();
+        net alarmNet ;
         alarmNet = xmlRead.makeNet("data/alarm_net.xml");
         assertNotNull(alarmNet);
         assertEquals("yes",bayesBall.bayesBallAns(alarmNet,"B-E|"));

@@ -12,8 +12,7 @@ public class Ex1 {
         try {
             // create the output file
             File myObj = new File("output.txt");
-            if (myObj.createNewFile()) {
-            } else {
+            if (!myObj.createNewFile()) {
                 System.out.println("File already exists.");
             }
         } catch (IOException e) {
@@ -24,14 +23,14 @@ public class Ex1 {
             //define writer in the output.txt file
             FileWriter myWriter = new FileWriter("output.txt");
             //read from the file
-            File myObj = new File("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/data/input1.txt");
+            File myObj = new File("../data/input.txt");
             Scanner myReader = new Scanner(myObj);
             String data1 = myReader.nextLine();
             //create empty net
-            net bNet=new net();
+            net bNet;
             while (myReader.hasNextLine()) {
                 //every run create net from the xml file
-                bNet=xmlRead.makeNet("/Users/idobar/Bsc/Year 2/AIAlgoProject/AiProject/AiProj/data/"+data1);
+                bNet=xmlRead.makeNet("../data/"+data1);
                 String data = myReader.nextLine();
 
                     if ('P' == data.charAt(0)) {

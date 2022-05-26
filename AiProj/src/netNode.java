@@ -15,8 +15,8 @@ public class netNode {
         if(bNet.getByString(name)==null) {
             this.bNet = bNet;
             this.name = name;
-            this.childs = new ArrayList<netNode>();
-            this.parents = new ArrayList<netNode>();
+            this.childs = new ArrayList<>();
+            this.parents = new ArrayList<>();
             if (parents.size() > 0) {
                 for (int i = 0; i < parents.size(); i++) {
                     if (this.bNet.getByString(parents.get(i)) != null) {
@@ -28,11 +28,9 @@ public class netNode {
                     }
                 }
             }
-            this.outcomes = new ArrayList<String>();
-            for (int i = 0; i < outcomes.size(); i++) {
-                this.outcomes.add(outcomes.get(i));
-            }
-            this.factor = new ArrayList<HashMap<String,String>>();
+            this.outcomes = new ArrayList<>();
+            this.outcomes.addAll(outcomes);
+            this.factor = new ArrayList<>();
         }
         else{
             // if there is already a node by this name then initialized it by the given values
@@ -41,16 +39,16 @@ public class netNode {
     }
     /**
      * this function build netNode that already exist
-     * @param name
-     * @param parents
-     * @param outcomes
-     * @param bNet
+     * @param name the name of the node.
+     * @param parents the node parents.
+     * @param outcomes the outcomes of the node.
+     * @param bNet the net he belongs to.
      */
     public void toNetNode(String name, ArrayList<String> parents, ArrayList<String> outcomes,net bNet){
         this.bNet = bNet;
         this.name = name;
-        this.childs = new ArrayList<netNode>();
-        this.parents = new ArrayList<netNode>();
+        this.childs = new ArrayList<>();
+        this.parents = new ArrayList<>();
         if (parents.size() > 0) {
             for (int i = 0; i < parents.size(); i++) {
                 if (this.bNet.getByString(parents.get(i)) != null) {
@@ -61,20 +59,18 @@ public class netNode {
                 }
             }
         }
-        this.outcomes = new ArrayList<String>();
-        for (int i = 0; i < outcomes.size(); i++) {
-            this.outcomes.add(outcomes.get(i));
-        }
-        this.factor = new ArrayList<HashMap<String,String>>();
+        this.outcomes = new ArrayList<>();
+        this.outcomes.addAll(outcomes);
+        this.factor = new ArrayList<>();
     }
     /**
      * build netNode only by name
-     * @param name
+     * @param name the new node name
      */
     public netNode(String name) {
         this.name = name;
-        this.childs = new ArrayList<netNode>();
-        this.parents = new ArrayList<netNode>();
+        this.childs = new ArrayList<>();
+        this.parents = new ArrayList<>();
     }
     /**
      * get the netNode name
@@ -111,29 +107,17 @@ public class netNode {
     public ArrayList<HashMap<String,String>> getFactor(){
         return this.factor;
     }
-    /**
-     * check if the given netNode is ancestor of the current netNode
-     * @param node
-     * @return boolean answer
-     */
-    public boolean inParents(netNode node) {
-        for (int i = 0; i < this.parents.size(); i++) {
-            if (this.parents.get(i).getName() == node.name) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     /**
      * replace the current factor with the given factor
-     * @param f
+     * @param f set the given factor as the current factor
      */
     public void setFactor(ArrayList<HashMap<String,String>> f){
       this.factor=f;
     }
     /**
      * this function get the cpt and fill the values in the correct place
-     * @param table
+     * @param table build factor from given string
      */
     public void build(String table){
         this.buildCpt();
@@ -149,8 +133,8 @@ public class netNode {
     public int getAsciSize(){
         int ans=0;
         ans=ans+this.name.charAt(0);
-        for(int i=0;i<this.parents.size();i++){
-            ans=ans+this.parents.get(i).getName().charAt(0);
+        for (netNode parent : this.parents) {
+            ans = ans + parent.getName().charAt(0);
         }
         return ans;
     }
@@ -160,12 +144,12 @@ public class netNode {
     public void buildCpt() {
         //compute the size of the table
         int size = this.outcomes.size();
-        for (int i = 0; i < this.parents.size(); i++) {
-            size = size * this.parents.get(i).getOutcomes().size();
+        for (netNode parent : this.parents) {
+            size = size * parent.getOutcomes().size();
         }
         //creat LinkedHashMap for every row of the cpt
         for (int i = 0; i < size; i++) {
-            this.factor.add(i, new LinkedHashMap<String,String>());
+            this.factor.add(i, new LinkedHashMap<>());
         }
         //fill the  current netNode values in the correct palces in the hashmaps
         for (int i = 0; i < this.outcomes.size(); i++) {
@@ -174,16 +158,16 @@ public class netNode {
             }
         }int time=size;
         // every netNode occurrence will appear every time/his outcome size
-        for (int i = 0; i < this.parents.size(); i++) {
-            time=time/this.parents.get(i).getOutcomes().size();
-            for (int h = 0; h < this.parents.get(i).getOutcomes().size(); h++) {
-                for (int j = (h * time); j < size; j += time*(this.parents.get(i).getOutcomes().size()-1)) {
-                    for (int m = j; m < j+time; m++) {
+        for (netNode parent : this.parents) {
+            time = time / parent.getOutcomes().size();
+            for (int h = 0; h < parent.getOutcomes().size(); h++) {
+                for (int j = (h * time); j < size; j += time * (parent.getOutcomes().size() - 1)) {
+                    for (int m = j; m < j + time; m++) {
                         if (m < size) {
-                            this.factor.get(m).put(this.parents.get(i).getName(), this.parents.get(i).getOutcomes().get(h));
+                            this.factor.get(m).put(parent.getName(), parent.getOutcomes().get(h));
                         }
                     }
-                    j+=time;
+                    j += time;
                 }
             }
         }

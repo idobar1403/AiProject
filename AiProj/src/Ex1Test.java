@@ -1,15 +1,11 @@
 import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Ex1Test {
 
     @Test
     void readFile() {
-        net bNet = new net();
+        net bNet;
         bNet = xmlRead.makeNet("data/alarm_net.xml");
         assertNotNull(bNet);
         assertNotNull(bNet.getByString("A"));

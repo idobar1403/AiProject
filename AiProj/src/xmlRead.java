@@ -6,12 +6,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class xmlRead {
     public static net makeNet(String fileName){
@@ -19,21 +15,21 @@ public class xmlRead {
         //create empty net
         net bNet = new net();
         // create ArrayLists that will contain the data from the xml file
-        ArrayList<String> vars= new ArrayList<String>();
-        ArrayList<String> outcomes= new ArrayList<String>();
-        ArrayList<String> givens= new ArrayList<String>();
+        ArrayList<String> vars= new ArrayList<>();
+        ArrayList<String> outcomes= new ArrayList<>();
+        ArrayList<String> givens= new ArrayList<>();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(fileName);
             doc.getDocumentElement().normalize();
             NodeList varlist= doc.getElementsByTagName("VARIABLE");
-            NodeList varlist2= doc.getElementsByTagName("DEFINITION");
-            ArrayList <String> table=new ArrayList<String>();
+            NodeList definitionList;
+            ArrayList <String> table=new ArrayList<>();
             // run on every variable and create netNode by his data
             for(int i=0; i<varlist.getLength();i++){
                 varlist=doc.getElementsByTagName("VARIABLE");
                 Node var=varlist.item(i);
-                String names="";
+                String names;
                 if(var.getNodeType()==Node.ELEMENT_NODE){
                     Element v = (Element) var;
                     names = v.getElementsByTagName("NAME").item(0).getTextContent();
@@ -41,12 +37,10 @@ public class xmlRead {
                     for(int j=0;j< v.getElementsByTagName("OUTCOME").getLength();j++){
                         outcomes.add(v.getElementsByTagName("OUTCOME").item(j).getTextContent());
                     }
-                    varlist2=doc.getElementsByTagName("DEFINITION");
-                    Node var2=varlist2.item(i);
-                    String names2="";
+                    definitionList=doc.getElementsByTagName("DEFINITION");
+                    Node var2=definitionList.item(i);
                     if(var2.getNodeType()==Node.ELEMENT_NODE){
                         Element v2 = (Element) var2;
-                        names2 = v2.getElementsByTagName("FOR").item(0).getTextContent();
                         for(int j=0;j< v2.getElementsByTagName("GIVEN").getLength();j++){
                             givens.add(v2.getElementsByTagName("GIVEN").item(j).getTextContent());
                         }
@@ -68,17 +62,13 @@ public class xmlRead {
                 }
             }
             //after adding all the nodes to the net add for every netNode his childs
-            bNet.addChild();
+            bNet.updateChilds();
             //for every netNode build his cpt with the values from the correct table
             for(int i=0;i<bNet.netNodes.size();i++){
                 bNet.netNodes.get(i).build(table.get(i));
             }
             return bNet;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
         return bNet;

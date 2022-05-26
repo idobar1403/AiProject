@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class net {
     public ArrayList<netNode> netNodes;
@@ -7,25 +6,23 @@ public class net {
      * build net with no netNodes
      */
     public net(){
-        this.netNodes = new ArrayList<netNode>();
+        this.netNodes = new ArrayList<>();
     }
     /**
      * build net from given netNodes
-     * @param netNodes
+     * @param netNodes the net
      */
     public net(ArrayList<netNode> netNodes) {
-        this.netNodes = new ArrayList<netNode>();
-        for (int i=0;i<netNodes.size();i++){
-            this.netNodes.add(netNodes.get(i));
-        }
+        this.netNodes = new ArrayList<>();
+        this.netNodes.addAll(netNodes);
         for (int i=0;i<this.netNodes.size();i++){
-            addChild();
+            updateChilds();
         }
     }
 
     /**
      * add netNode to the net
-     * @param node
+     * @param node the added node
      */
     public void add(netNode node) {
         if (!exist(node)) {
@@ -35,12 +32,12 @@ public class net {
 
     /**
      * ask if the netNode is already exist in the net
-     * @param node
+     * @param node the node we want to check if exists
      * @return boolean answer
      */
     public boolean exist(netNode node) {
-        for (int i = 0; i < this.netNodes.size(); i++) {
-            if (this.netNodes.get(i).getName() == node.getName()) {
+        for (netNode netNode : this.netNodes) {
+            if (netNode.getName().equals(node.getName())) {
                 return true;
             }
         }
@@ -48,8 +45,8 @@ public class net {
     }
     /**
      * ask if the netNode of the name is ancestor of the given netNode by recursion
-     * @param e
-     * @param name
+     * @param e the starting node
+     * @param name the node we look for
      * @return boolean answer
      */
     public boolean inParents(netNode e, String name){
@@ -65,14 +62,14 @@ public class net {
     }
     /**
      * return the netNode with the same name as the given string
-     * @param n
+     * @param n - the name of the node
      * @return netNode
      */
     public netNode getByString(String n) {
-        for (int i = 0; i < this.netNodes.size(); i++) {
-            if(this.netNodes.get(i).getName()!=null) {
-                if (this.netNodes.get(i).getName().equals(n)) {
-                    return this.netNodes.get(i);
+        for (netNode netNode : this.netNodes) {
+            if (netNode.getName() != null) {
+                if (netNode.getName().equals(n)) {
+                    return netNode;
                 }
             }
         }
@@ -81,19 +78,19 @@ public class net {
     /**
      * update for every netNode his childes by iterate over his parents
      */
-    public void addChild() {
-        for (int i = 0; i < this.netNodes.size(); i++) {
-            for (int j = 0; j < this.netNodes.get(i).parents.size(); j++) {
+    public void updateChilds() {
+        for (netNode netNode : this.netNodes) {
+            for (int j = 0; j < netNode.parents.size(); j++) {
                 boolean found = false;
-                for (int h = 0; h < getByString(this.netNodes.get(i).parents.get(j).getName()).getChilds().size(); h++) {
+                for (int h = 0; h < getByString(netNode.parents.get(j).getName()).getChilds().size(); h++) {
                     // if the child of the parents is already in the child ArrayList of his parents
-                    if (this.netNodes.get(i).name.equals(getByString(this.netNodes.get(i).parents.get(j).getName()).getChilds().get(h).getName())) {
+                    if (netNode.name.equals(getByString(netNode.parents.get(j).getName()).getChilds().get(h).getName())) {
                         found = true;
                     }
                 }
                 if (!found) {
                     //if the child is not in his parents child ArrayList
-                    getByString(this.netNodes.get(i).parents.get(j).getName()).getChilds().add(this.netNodes.get(i));
+                    getByString(netNode.parents.get(j).getName()).getChilds().add(netNode);
                 }
             }
         }
