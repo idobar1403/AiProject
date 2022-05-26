@@ -3,8 +3,8 @@ import java.util.ArrayList;
 public class bayesBall {
     /**
      * this function create the variables in order to send them to the recursion function
-     * @param bnet
-     * @param query
+     * @param bnet the net to make the bayesball on
+     * @param query the query to check
      * @return String as the answer to the query
      */
     public static String bayesBallAns(net bnet, String query) {
@@ -13,11 +13,10 @@ public class bayesBall {
         String[] depend = split1[0].split("-");
         netNode start = bnet.getByString(depend[0]);
         netNode end = bnet.getByString(depend[1]);
-        ArrayList<netNode> givens = new ArrayList<netNode>();
+        ArrayList<netNode> givens = new ArrayList<>();
         if (split1.length > 1) {
             String[] split2 = split1[1].split(",");
-            for (int i = 0; i < split2.length; i++) {
-                String temp = split2[i];
+            for (String temp : split2) {
                 String[] split3 = temp.split("=");
                 if (bnet.getByString(split3[0]) != null) {
                     givens.add(bnet.getByString(split3[0]));
@@ -25,9 +24,9 @@ public class bayesBall {
             }
         }
         //the visited ArrayList will save certain nodes in order to prevent infinity recursion
-        ArrayList<netNode> visited = new ArrayList<netNode>();
+        ArrayList<netNode> visited = new ArrayList<>();
         boolean ans = bayesball(start,start, end, givens, true, visited);
-        if (ans == false) {
+        if (!ans) {
             return "yes";
         } else {
             return "no";
@@ -43,7 +42,8 @@ public class bayesBall {
      * @param visited the ArrayList of the visited nodes
      * @return boolean answer if they independent
      */
-    public static boolean bayesball(netNode src,netNode start, netNode end, ArrayList<netNode> givens, boolean up, ArrayList<netNode> visited){
+    public static boolean bayesball(netNode src,netNode start, netNode end, ArrayList<netNode> givens,
+                                    boolean up, ArrayList<netNode> visited){
         // check if the node arrived at the destination
         if(start.getName().equals(end.getName())){
             return true;
@@ -63,7 +63,7 @@ public class bayesBall {
                     }
                 }
             }
-            // run over his childs
+            // run over his children
             for (int i = 0; i < start.getChilds().size(); i++) {
                 visited.add(start);
                 // check if the node already visited in the child or if the child is not the src
@@ -110,7 +110,7 @@ public class bayesBall {
                         }
                     }
                 }
-                // run over the childs
+                // run over the children
                 for(int i=0;i<start.getChilds().size();i++){
                     visited.add(start);
                    // check if the node already visited in the child

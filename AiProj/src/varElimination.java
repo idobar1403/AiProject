@@ -404,7 +404,8 @@ public class varElimination {
      * @param names the names of every node in the ArrayList<ArrayList<HashMap<String,String>>>
      * @return the sored names ArrayList
      */
-    public static ArrayList<String> sort(ArrayList<ArrayList<HashMap<String,String>>> temp,net bNet,ArrayList<String>names){
+    public static ArrayList<String> sort(ArrayList<ArrayList<HashMap<String,String>>> temp,net bNet,
+                                         ArrayList<String>names){
         // bubble sort with the sizes of the ArrayLists
         for(int i=0;i< temp.size();i++){
             for(int j=1;j< temp.size()-i;j++){
