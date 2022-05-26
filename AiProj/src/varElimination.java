@@ -158,8 +158,8 @@ public class varElimination {
             }
 
             // sort the keepFactors ArrayList
-            namesOfFactors = sort(keepFactors, rNet, namesOfFactors);
-            ArrayList<netNode> releventFactors = new ArrayList<netNode>();
+            sort(keepFactors, rNet, namesOfFactors);
+            ArrayList<netNode> releventFactors = new ArrayList<>();
             // add the nodes that their factors contains the hidden
             for (String ofFactor : namesOfFactors) {
                 releventFactors.add(rNet.getByString(ofFactor));
@@ -216,7 +216,7 @@ public class varElimination {
                     namesOfFactors.remove(i);
                     i--;
                     // sort the factors
-                    namesOfFactors = sort(joinedFactors, rNet, namesOfFactors);
+                    sort(joinedFactors, rNet, namesOfFactors);
                     releventFactors.clear();
                     for (String namesOfFactor : namesOfFactors) {
                         releventFactors.add(rNet.getByString(namesOfFactor));
@@ -335,7 +335,7 @@ public class varElimination {
                 joinedFactors.remove(i);
                 namesOfFactors.remove(i);
                 i--;
-                namesOfFactors=sort(joinedFactors,rNet,namesOfFactors);
+                sort(joinedFactors,rNet,namesOfFactors);
                 factorsOfHidden.clear();
                 for (String namesOfFactor : namesOfFactors) {
                     factorsOfHidden.add(rNet.getByString(namesOfFactor));
@@ -402,10 +402,9 @@ public class varElimination {
      * @param temp the ArrayList<ArrayList<HashMap<String,String>>> that the function is sorting
      * @param bNet the net
      * @param names the names of every node in the ArrayList<ArrayList<HashMap<String,String>>>
-     * @return the sored names ArrayList
      */
-    public static ArrayList<String> sort(ArrayList<ArrayList<HashMap<String,String>>> temp,net bNet,
-                                         ArrayList<String>names){
+    public static void sort(ArrayList<ArrayList<HashMap<String,String>>> temp, net bNet,
+                            ArrayList<String>names){
         // bubble sort with the sizes of the ArrayLists
         for(int i=0;i< temp.size();i++){
             for(int j=1;j< temp.size()-i;j++){
@@ -432,7 +431,6 @@ public class varElimination {
                 }
             }
         }
-        return names;
     }
     /**
      * this function will get two nodes that has factors and it will merge their factors
