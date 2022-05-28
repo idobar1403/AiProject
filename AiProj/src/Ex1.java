@@ -23,14 +23,14 @@ public class Ex1 {
             //define writer in the output.txt file
             FileWriter myWriter = new FileWriter("output.txt");
             //read from the file
-            File myObj = new File("../data/input.txt");
+            File myObj = new File("../data/inputs/input4.txt");
             Scanner myReader = new Scanner(myObj);
             String data1 = myReader.nextLine();
             //create empty net
             net bNet;
             while (myReader.hasNextLine()) {
                 //every run create net from the xml file
-                bNet=xmlRead.makeNet("../data/"+data1);
+                bNet=xmlRead.makeNet("../data/nets/"+data1);
                 String data = myReader.nextLine();
 
                     if ('P' == data.charAt(0)) {
