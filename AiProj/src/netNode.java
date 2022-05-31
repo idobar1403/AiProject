@@ -151,7 +151,7 @@ public class netNode {
         for (int i = 0; i < size; i++) {
             this.factor.add(i, new LinkedHashMap<>());
         }
-        //fill the  current netNode values in the correct palces in the hashmaps
+        //fill the current netNode values in the correct places in the hashmaps
         for (int i = 0; i < this.outcomes.size(); i++) {
             for (int j = i; j < size; j += this.outcomes.size()) {
                 this.factor.get(j).put(this.name, this.outcomes.get(i));
@@ -161,12 +161,14 @@ public class netNode {
         for (netNode parent : this.parents) {
             time = time / parent.getOutcomes().size();
             for (int h = 0; h < parent.getOutcomes().size(); h++) {
+                // to complete one loop of every outcome
                 for (int j = (h * time); j < size; j += time * (parent.getOutcomes().size() - 1)) {
                     for (int m = j; m < j + time; m++) {
                         if (m < size) {
                             this.factor.get(m).put(parent.getName(), parent.getOutcomes().get(h));
                         }
                     }
+                    // move j + "times" forward because in the inner for we moved "times" number of times
                     j += time;
                 }
             }

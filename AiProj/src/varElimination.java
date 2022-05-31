@@ -32,7 +32,7 @@ public class varElimination {
                 evidenceValues.add(givens[i + 1]);
             }
         }
-        rNet.netNodes.add(bNet.getByString(query[0]));
+        rNet.add(bNet.getByString(query[0]));
         // add the evidence to arrayList and the values to other one
 
         // check if there are hidden nodes
@@ -60,17 +60,18 @@ public class varElimination {
                         String b = query[0] + "-" + bNet.netNodes.get(i).getName() + "|" + firstSplit[1];
                         // send to bayesball
                         if (bayesBall.bayesBallAns(bNet, b).equals("no")) {
-                            rNet.netNodes.add(bNet.netNodes.get(i));
+                            // add the hidden to the net
+                            rNet.add(bNet.netNodes.get(i));
                         }
                     }
                 }
             }
         }
-        // add to the relevant net the query, the evidences and the relevant hiddens
-        rNet.add(bNet.getByString(query[0]));
+        // add to the relevant net the evidences
         for (String s : evidence) {
             rNet.add(bNet.getByString(s));
         }
+        // add the relevant hiddens to list
         for (String hidden : hiddens) {
             if (rNet.getByString(hidden) != null) {
                 relevantHidden.add(hidden);
@@ -81,11 +82,11 @@ public class varElimination {
             for (int i = 0; i < rNet.netNodes.get(j).getFactor().size(); i++) {
                 boolean found = true;
                 // first check if the query value is the same as the value of the query question
-                if (rNet.netNodes.get(j).getFactor().get(i).get(query[0]) != null) {
+                if (rNet.netNodes.get(j).getFactor().get(i).containsKey(query[0])) {
                     if (rNet.netNodes.get(j).getFactor().get(i).get(query[0]).equals(query[1])) {
                         // check the same for the all the evidences
                         for (int k = 0; k < evidence.size(); k++) {
-                            if (rNet.netNodes.get(j).getFactor().get(i).get(evidence.get(k)) != null) {
+                            if (rNet.netNodes.get(j).getFactor().get(i).containsKey(evidence.get(k))) {
                                 if (!rNet.netNodes.get(j).getFactor().get(i).get(evidence.get(k)).equals(evidenceValues.get(k))) {
                                     found = false;
                                 }
@@ -125,7 +126,7 @@ public class varElimination {
         for (int k = 0; k < evidence.size() ; k++) {
             for(int i =0;i< rNet.netNodes.size();i++) {
                 if (rNet.netNodes.get(i).getFactor().size() > 0) {
-                    if (rNet.netNodes.get(i).getFactor().get(0).get(evidence.get(k)) != null) {
+                    if (rNet.netNodes.get(i).getFactor().get(0).containsKey(evidence.get(k))) {
                         for (int h = 0; h < rNet.netNodes.get(i).getFactor().size(); h++) {
                             //get the correct values of the evidence and remove the not correct values
                             String tempValue = rNet.netNodes.get(i).getFactor().get(h).get(evidence.get(k));
@@ -159,37 +160,34 @@ public class varElimination {
 
             // sort the keepFactors ArrayList
             sort(keepFactors, rNet, namesOfFactors);
-            ArrayList<netNode> releventFactors = new ArrayList<>();
+            ArrayList<netNode> relevantFactors = new ArrayList<>();
             // add the nodes that their factors contains the hidden
             for (String ofFactor : namesOfFactors) {
-                releventFactors.add(rNet.getByString(ofFactor));
-            }
-            // add the factors to the factorsOfHidden ArrayList
-            for (int i = 0; i < namesOfFactors.size(); i++) {
-                factorsOfHidden.add(releventFactors.get(i));
+                relevantFactors.add(rNet.getByString(ofFactor));
+                factorsOfHidden.add(rNet.getByString(ofFactor));
             }
             // add the factors to the joinedFactors ArrayList
-            for (netNode releventFactor : releventFactors) {
-                joinedFactors.add(releventFactor.getFactor());
+            for (netNode factor : relevantFactors) {
+                joinedFactors.add(factor.getFactor());
             }
             //run on all the factors of the hidens and join them
-            for (int i = 0; i < releventFactors.size(); i++) {
-                if (releventFactors.size() > 1) {
+            for (int i = 0; i < relevantFactors.size(); i++) {
+                if (relevantFactors.size() > 1) {
                     // send the joined factors to the joinedFactors ArrayList
-                    joinedFactors.add(join(releventFactors.get(i), releventFactors.get(i + 1), rNet));
+                    joinedFactors.add(join(relevantFactors.get(i), relevantFactors.get(i + 1), rNet));
                     // run on the factors and match the lines in order to multiply the new joined lines
-                    for (int j = 0; j < releventFactors.get(i).getFactor().size(); j++) {
+                    for (int j = 0; j < relevantFactors.get(i).getFactor().size(); j++) {
                         // get the first line of the first factor
-                        temp = (HashMap<?,?> ) releventFactors.get(i).getFactor().get(j).clone();
+                        temp = (HashMap<?,?> ) relevantFactors.get(i).getFactor().get(j).clone();
                         String p = temp.get("P").toString();
                         // get his probability
                         double p1 = Double.parseDouble(p);
                         temp.remove("P");
                         joinedFactors.get(i).indexOf(temp);
                         // run over the second factor
-                        for (int z = 0; z < releventFactors.get(i + 1).getFactor().size(); z++) {
+                        for (int z = 0; z < relevantFactors.get(i + 1).getFactor().size(); z++) {
                             // get the first line of the second factor
-                            anotherTemp = (HashMap<?,?> ) releventFactors.get(i + 1).getFactor().get(z).clone();
+                            anotherTemp = (HashMap<?,?> ) relevantFactors.get(i + 1).getFactor().get(z).clone();
                             String p3 = anotherTemp.get("P").toString();
                             double p2 = Double.parseDouble(p3);
                             anotherTemp.remove("P");
@@ -204,32 +202,34 @@ public class varElimination {
                                     p2 = p2 * p1;
                                     String stringAnswer = "" + p2;
                                     joinedFactors.get(joinedFactors.size() - 1).get(m).put("P", stringAnswer);
+                                    break;
                                 }
                             }
                         }
                     }
                     // remove the factors that made the joined factor
-                    releventFactors.get(i + 1).setFactor(joinedFactors.get(joinedFactors.size() - 1));
-                    releventFactors.remove(i);
+                    relevantFactors.get(i + 1).setFactor(joinedFactors.get(joinedFactors.size() - 1));
+                    relevantFactors.remove(i);
                     joinedFactors.remove(i);
                     joinedFactors.remove(i);
                     namesOfFactors.remove(i);
                     i--;
                     // sort the factors
                     sort(joinedFactors, rNet, namesOfFactors);
-                    releventFactors.clear();
+                    relevantFactors.clear();
                     for (String namesOfFactor : namesOfFactors) {
-                        releventFactors.add(rNet.getByString(namesOfFactor));
+                        relevantFactors.add(rNet.getByString(namesOfFactor));
                     }
                     for (int j = 0; j < joinedFactors.size(); j++) {
                         if (joinedFactors.get(j).size() == 1) {
                             joinedFactors.remove(j);
-                            releventFactors.remove(j);
+                            relevantFactors.remove(j);
                         }
                     }
                 }
             }
             // this will eliminate the hidden variable by running on all of his possible outcomes
+            // can be more than two outcomes for every hidden
             for (int i = 0; i < joinedFactors.get(0).size(); i++) {
                 temp = (HashMap<?,?> ) joinedFactors.get(0).get(i).clone();
                 String p = temp.get("P").toString();
@@ -267,8 +267,10 @@ public class varElimination {
             for (int i = 0; i < factorsOfHidden.size() - 1; i++) {
                 factorsOfHidden.remove(i);
             }
+
             factorsOfHidden.get(0).setFactor(joinedFactors.get(0));
             // remove all the factors that as been used in the elimination
+            // to make sure that the hidden will not appear anymore
             for (int i = 0; i < rNet.netNodes.size(); i++) {
                 if (rNet.netNodes.get(i).getFactor().size() > 0) {
                     if (rNet.netNodes.get(i).getFactor().get(0).containsKey(s)) {
@@ -280,6 +282,7 @@ public class varElimination {
             factorsOfHidden.clear();
             keepFactors.clear();
             namesOfFactors.clear();
+            // clear every factor that has only one row
             for (int i = 0; i < rNet.netNodes.size(); i++) {
                 if (rNet.netNodes.get(i).getFactor().size() == 1) {
                     rNet.netNodes.get(i).getFactor().clear();

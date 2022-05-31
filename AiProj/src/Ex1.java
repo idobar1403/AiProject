@@ -23,7 +23,7 @@ public class Ex1 {
             //define writer in the output.txt file
             FileWriter myWriter = new FileWriter("output.txt");
             //read from the file
-            File myObj = new File("../data/inputs/input4.txt");
+            File myObj = new File("../data/inputs/input1.txt");
             Scanner myReader = new Scanner(myObj);
             String data1 = myReader.nextLine();
             //create empty net
