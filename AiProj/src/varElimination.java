@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class varElimination {
+    private static int j;
+
     /**
      * this function computes the probability, the number of adding actions and the number of the multiply actions for the query.
      * @param bNet the net
@@ -98,7 +100,8 @@ public class varElimination {
                         found = false;
                     }
                     if (found) {
-                        if (rNet.netNodes.get(j).getFactor().size() - 1 == evidence.size() + 1) {
+                        if ((rNet.netNodes.get(j).getFactor().get(i).size() - 1 == evidence.size() + 1)&&
+                                rNet.netNodes.get(j).name.equals(query[0])) {
                             return rNet.netNodes.get(j).getFactor().get(i).get("P") + "," + "0" + "," + "0";
                         }
                     }
